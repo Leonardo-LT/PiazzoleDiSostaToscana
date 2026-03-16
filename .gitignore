@@ -12,4 +12,5 @@ utils.py
 engine.py
 *.zip
 *.pyc
-pycache/
+__pycache__/
+.gitignore 
