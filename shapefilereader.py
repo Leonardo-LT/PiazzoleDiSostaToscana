@@ -9,7 +9,7 @@ import numpy as np
 from toscanaStrategy import ToscanaTileStrategy
 from requestTileContext import requestTileContext
 
-context = requestTileContext(ToscanaTileStrategy())
+context = requestTileContext(ToscanaTileStrategy(0.0008, 0.0008))
 
 def downloadTile(lat, long, fileName):
   print(fileName, "\n")
@@ -19,16 +19,16 @@ def downloadTile(lat, long, fileName):
 def iterateLine(line, n, name):
   name = "_".join(name.split(" "))
   #print("lunghezza: ", line.length, "\n")
-  step =  0.0019 
+  step =  0.0008 
   currStep = 0
   i = 0
 
-  sum = 0
+  #sum = 0
 
   try:
     os.mkdir(f"Immagini/{name}")
   except Exception as e:
-    print(f"An error occurred: {e}")
+    print(f"Errore: {e}")
 
   while True:
     point = geometry.line_interpolate_point(currStep)
@@ -37,20 +37,20 @@ def iterateLine(line, n, name):
     if bytes != None:
       img = Image.open(BytesIO(bytes))
       imgArray = np.array(img)
-      is_grey = ((imgArray >= 110) & (imgArray <= 160)).any(axis=2)
+      # is_grey = ((imgArray >= 110) & (imgArray <= 160)).any(axis=2)
       
-      count = np.count_nonzero(is_grey)
-      sum += count
+      # count = np.count_nonzero(is_grey)
+      # sum += count
 
       img.save(f"./Immagini/{name}/{n}.{i}.png")
-      print("Count: ", count)
+      # print("Count: ", count)
 
     currStep+=step
     if currStep >= line.length: 
       print("lunghezza: ", line.length)
       break
   
-  return sum
+  #return sum
 
 pathToShapefiles = "/home/leon/Documenti/Tesi/iternet/iternet_c91b903823ae2a975c539cc65f880af9/iternet/shp/"
 
@@ -93,13 +93,14 @@ for i, row in gdf.iterrows():
   #print(row["tipostrada"])
   #print(row)
   geometry = row["geometry"]
-  greySum += iterateLine(geometry, n, row["indirizzo"])
+  #greySum += iterateLine(geometry, n, row["indirizzo"])
+  iterateLine(geometry, n, row["indirizzo"])
   n+=1
 
-  # la media su circa 1000 tiles è di circa 80000 pixel grigi, possiamo assumere che un immagine contenga una strada se ha almeno 70000 pixel grigi.
-  average = greySum / (n*10)
-  print("Average: ", average)
-  print("Sum: ", greySum, "\n")
+  # la media su circa 1000 tiles è di circa 80000 pixel grigi
+  # average = greySum / (n*10)
+  # print("Average: ", average)
+  # print("Sum: ", greySum, "\n")
   
   #if (n >= 20): break
   

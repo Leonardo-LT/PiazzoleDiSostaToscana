@@ -2,7 +2,7 @@ import requests
 from requestTileStrategy import RequestTileStrategy
 
 class ToscanaTileStrategy(RequestTileStrategy):
-  def __init__(self, tileHeight=0.0019, tileWidth=0.0019):
+  def __init__(self, tileHeight, tileWidth):
     self.wmsUrl = "https://www502.regione.toscana.it/ows_ofc/com.rt.wms.RTmap/wms"
 
     self.params = {
@@ -13,8 +13,8 @@ class ToscanaTileStrategy(RequestTileStrategy):
       "LAYERS": "rt_ofc.5k24.32bit",
       "CRS": "EPSG:4326",
       "BBOX": None,
-      "WIDTH": "512",
-      "HEIGHT": "512",
+      "WIDTH": "224",
+      "HEIGHT": "224",
       "FORMAT": "image/jpeg",
     }
 
