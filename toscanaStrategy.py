@@ -39,12 +39,8 @@ class ToscanaTileStrategy(RequestTileStrategy):
     self.tileWidth = width
 
 
-  def setTileCoordinates(self, lat, long):
-    self.setBBOX(lat, long)
-
-
   def requestTileBytes(self, lat, long):
-    self.setTileCoordinates(lat, long)
+    self.setBBOX(lat, long)
 
     try:
         print(f"Coordinate: {lat}, {long}...")

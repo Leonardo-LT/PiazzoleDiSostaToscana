@@ -2,11 +2,10 @@ Immagini
 dataset
 cocoDataset
 yolo_eval_labels
-bestModel.pth
+*.pth
 coco_eval.py
 coco_utils.py
-cocoDataset.zip
-dataset.zip
+*.zip
 model_epoch_21.pth
 utils.py
 engine.py
@@ -14,3 +13,4 @@ engine.py
 *.pyc
 __pycache__/
 .gitignore 
+*.txt
