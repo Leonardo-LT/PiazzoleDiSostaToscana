@@ -1,7 +1,6 @@
 Immagini
 dataset
 cocoDataset
-yolo_eval_labels
 *.pth
 coco_eval.py
 coco_utils.py
@@ -14,3 +13,5 @@ engine.py
 __pycache__/
 .gitignore 
 *.txt
+tiles
+*csv

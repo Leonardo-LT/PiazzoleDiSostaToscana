@@ -43,7 +43,7 @@ class ToscanaTileStrategy(RequestTileStrategy):
     self.setBBOX(lat, long)
 
     try:
-        print(f"Coordinate: {lat}, {long}...")
+        #print(f"Coordinate: {lat}, {long}...")
         
         response = requests.get(self.wmsUrl, params=self.params, timeout=5)
         #print(response.headers, "\n")

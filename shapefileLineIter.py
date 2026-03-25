@@ -31,6 +31,7 @@ class shapefileLineIter:
     
       elif geometry.geom_type == "MultiLineString":
         for line in list(geometry.geoms):
+          currStep = 0
           while currStep < line.length:
             point = line.interpolate(currStep)
             yield point

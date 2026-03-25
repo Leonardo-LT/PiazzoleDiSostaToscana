@@ -8,13 +8,13 @@ from io import BytesIO
 import os
 import shapely
 import datetime
+from cnnInference import inferFromBytes as infer
 
 tipiStrade = ["AA", "SS", "SR"]
 
 def filter(el):
   if el is None:
-    print("Elemento None")
-    return None
+    return False
   
   return el["tipostrada"].isin(tipiStrade)
 
@@ -24,31 +24,34 @@ sli.setGdfFilter(filter)
 shapeiter = iter(sli)
 
 reqTileContext = requestTileContext(ToscanaTileStrategy(0.0008, 0.0008))
-metadataManager = tilesMetadataManager("./tilesMetadata.geojson")
-print(metadataManager.gdf.head()["tileBBOX"])
-exit()
+metadataManager = tilesMetadataManager("./tilesMetadata.csv")
 
-print("eccoic")
 def downloadTile(lat, long, path):
   bytes = reqTileContext.requestTileBytes(lat, long)
+  if bytes == None:
+    print("Not image")
+    return 0
 
   try:
     img = Image.open(BytesIO(bytes))
-    img.save(path)
+    res = infer(img)
+
+    if (res >= 0.75):
+      img.save(path)
+
     img.close()
   except Exception as e:
     print(f"Error saving image: {e}")
-    return False
+    return 0
 
-  return True
+  return res
 
 def getNextCoordinates():
   point = next(shapeiter)
   return point.y, point.x
 
 def getAllTiles():
-  print("dentro")
-  i = 0
+  i = 0 # contatore per salvare i metadati ogni tot file scaricati
   while(True):
     lat, long = getNextCoordinates()
 
@@ -56,16 +59,16 @@ def getAllTiles():
       print("Shapefile iteration completed")
       break
 
-    res = downloadTile(lat, long, f"tiles/{lat}.{long}")
-    if res:
+    res = downloadTile(lat, long, f"tiles/{lat}.{long}.png")
+    if res >= 0.65:
       i+=1
+      print("Piaz count: ", i)
       bboxPolygon = shapely.geometry.Polygon([(long-0.0008, lat-0.0008), (long+0.0008, lat-0.0008), (long+0.0008, lat+0.0008), (long-0.0008, lat+0.0008)])
       metadataManager.addTileMetadata(f"{lat}.{long}", bboxPolygon, None, None, None, datetime.datetime.now(), None, None)
 
 
 try:
   #os.mkdir("tiles")
-  print("eccolo")
   getAllTiles()
 except KeyboardInterrupt as e:
   print(f"Error occurred: {e}")
