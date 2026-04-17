@@ -19,7 +19,9 @@ class shapefileLineIter:
     self.gdf = self.gdf[filterFunc(self.gdf)]
 
   def __iter__(self):
-    for _, row in self.gdf.iterrows():
+    for counter, (idx, row) in enumerate(self.gdf.iterrows()):
+      if (counter < 30 ): continue
+      print(idx)
       currStep = 0
       geometry = row["geometry"]
 

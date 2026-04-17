@@ -68,3 +68,7 @@ class tilesMetadataManager:
       self.gdf.to_csv(self.pathToCSV, index=False)
     except Exception as e:
       print(f"Error saving to CSV: {e}")
+
+  def checkTileIdDup(self, tileId):
+    res = tileId in self.gdf["tileID"].values
+    return res
