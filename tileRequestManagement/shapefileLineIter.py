@@ -2,46 +2,47 @@
 # implementa un generatore che restituisce le coordinate dei punti lungo le geometrie LineString o MultiLineString, con un certo step
 import geopandas
 
+
 class shapefileLineIter:
-  def __init__(self, pathToShapefile, layer, stepSize):
-    self.pathToShapefile = pathToShapefile
-    self.layer = layer
-    self.stepSize = stepSize
-    self.gdf = geopandas.read_file(self.pathToShapefile, layer=self.layer)
+    def __init__(self, pathToShapefile, layer, stepSize):
+        self.pathToShapefile = pathToShapefile
+        self.layer = layer
+        self.stepSize = stepSize
+        self.gdf = geopandas.read_file(self.pathToShapefile, layer=self.layer)
 
-  def setStepSize(self, newStepSize):
-    self.stepSize = newStepSize
-  
-  def setGdfCRS(self, newCRS):
-    self.gdf.to_crs(newCRS, inplace=True)
+    def setStepSize(self, newStepSize):
+        self.stepSize = newStepSize
 
-  def setGdfFilter(self, filterFunc):
-    self.gdf = self.gdf[filterFunc(self.gdf)]
+    def setGdfCRS(self, newCRS):
+        self.gdf.to_crs(newCRS, inplace=True)
 
-  def __iter__(self):
-    for counter, (idx, row) in enumerate(self.gdf.iterrows()):
-      if (counter < 30 ): continue
-      print(idx)
-      currStep = 0
-      geometry = row["geometry"]
+    def setGdfFilter(self, filterFunc):
+        self.gdf = self.gdf[filterFunc(self.gdf)]
 
-      if geometry.geom_type == "LineString":
-        while currStep < geometry.length:
-          point = geometry.interpolate(currStep)
-          yield point
-          currStep += self.stepSize
-    
-      elif geometry.geom_type == "MultiLineString":
-        for line in list(geometry.geoms):
-          currStep = 0
-          while currStep < line.length:
-            point = line.interpolate(currStep)
-            yield point
-            currStep += self.stepSize
+    def __iter__(self):
+        for counter, (idx, row) in enumerate(self.gdf.iterrows()):
+            if counter < 40:
+                continue  # ELIMINARE
+            print(idx)
+            currStep = 0
+            geometry = row["geometry"]
 
-  
+            if geometry.geom_type == "LineString":
+                while currStep < geometry.length:
+                    point = geometry.interpolate(currStep)
+                    yield point
+                    currStep += self.stepSize
 
-# modificare la classe in modo che permette di 
-# ricominciare dall'ultima riga letta, 
-# in modo da poter riprendere l'iterazione dopo una pausa 
+            elif geometry.geom_type == "MultiLineString":
+                for line in list(geometry.geoms):
+                    currStep = 0
+                    while currStep < line.length:
+                        point = line.interpolate(currStep)
+                        yield point
+                        currStep += self.stepSize
+
+
+# modificare la classe in modo che permette di
+# ricominciare dall'ultima riga letta,
+# in modo da poter riprendere l'iterazione dopo una pausa
 # o un'interruzione del processo.

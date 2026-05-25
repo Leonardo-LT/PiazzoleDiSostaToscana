@@ -3,7 +3,7 @@ import os
 import sys
 from io import BytesIO
 
-sys.path.insert(0, "../")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import cv2
 import numpy as np
 import shapely
@@ -14,10 +14,11 @@ from tilesMetadataManager import tilesMetadataManager
 from toscanaStrategy import ToscanaTileStrategy
 
 from cnnInference import inferFromBytes as infer
-from filterImages import filterImage
+
+# from RoadExtraction.filterImages import filterImage
 from test import infer as inferBB
 
-tipiStrade = ["AA"]  # , "SS", "SR"
+tipiStrade = ["AA", "SS", "SR"]  # , "SS", "SR"
 treshold = 0.6
 
 
@@ -65,7 +66,7 @@ def saveAnn(img, pred, path, filename):
         img.save(path + filename)
     else:
         print(pred[0]["scores"])
-        img.save(path + "/no" + filename)
+        # img.save(path + "/no" + filename)
     return found
 
 

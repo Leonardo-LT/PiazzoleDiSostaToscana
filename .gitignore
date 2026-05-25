@@ -1,7 +1,38 @@
-*
-!*.py
-!tileRequestManagement/
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Utility scripts (not part of core project)
+utility/
+
+# Datasets and large binary files
+datasets/
+FilteredDatasetSma/
+tileRequestManagement/tiles/
+tileRequestManagement/prevTries/
+areaExtimate/outImages/
+areaExtimate/areaExtimateTest/
+RoadExtraction/TestImages/
+
+# Generated / output files
+*.csv
+*.json
+map.html
+
+# Notes and text files
+*.txt
+
+# Torchvision reference library files (not original code)
 engine.py
 utils.py
-coco_utils.py
 coco_eval.py
+coco_utils.py
+
+# Misc test scripts
+displayTest.py
+
+*.png
+

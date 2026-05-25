@@ -1,5 +1,9 @@
 import requests
-from requestTileStrategy import RequestTileStrategy
+
+try:
+  from .requestTileStrategy import RequestTileStrategy
+except ImportError:
+  from requestTileStrategy import RequestTileStrategy
 
 class ToscanaTileStrategy(RequestTileStrategy):
   def __init__(self, tileHeight, tileWidth):
