@@ -68,8 +68,8 @@ def testSegmentation(path, net, bSize):
     )
 
     testing_imgs = SegmentationDataset(
-        img_dir=os.path.join(path, "train"),
-        ann_file=os.path.join(path, "train", "annotations.json"),
+        img_dir=os.path.join(path, "test"),
+        ann_file=os.path.join(path, "test", "annotations.json"),
         transform=transformEvalData,
     )
 

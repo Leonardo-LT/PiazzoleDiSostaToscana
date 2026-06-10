@@ -10,6 +10,10 @@ class RequestTileStrategy:
     pass
 
 
+  def requestCustomBBoxBytes(self, min_lat, min_lon, max_lat, max_lon, width_px, height_px):
+    pass
+
+
   def requestAndSaveTile(self, lat, long, fileName, path="./"):
     bytes = self.requestTileBytes(lat, long)
 

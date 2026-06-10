@@ -23,7 +23,7 @@ class tilesMetadataManager:
       # avendo un booleano che indica se la tile è una piazzola (quindi un immagine croppata sulla piazzola) o meno 
       # (assumo che tutte le immagini contengano piazzole),
  
-      self.gdf = gpd.GeoDataFrame(columns=["tileID", "tileBBOX", "piazzola", "piazzolaBBOXs", "sizeEstimated", "downloadDate", "firstCNNconfidence", "secondCNNconfidence"])
+      self.gdf = gpd.GeoDataFrame(columns=["tileID", "tileBBOX", "piazzola", "piazzolaBBOXs", "sizeEstimated", "downloadDate", "firstCNNconfidence", "secondCNNconfidence", "roadAngle", "roadSide", "roadSegmentId"])
     except Exception as e:
       print(e)
     
@@ -36,7 +36,7 @@ class tilesMetadataManager:
     else:
       return row.iloc[0].to_dict()
     
-  def addTileMetadata(self, tileID, tileBBOX, piazzola, piazzolaBBOXs, sizeEstimated, downloadDate, firstCNNconfidence, secondCNNconfidence):
+  def addTileMetadata(self, tileID, tileBBOX, piazzola, piazzolaBBOXs, sizeEstimated, downloadDate, firstCNNconfidence, secondCNNconfidence, roadAngle=None, roadSide=None, roadSegmentId=None):
     newRow = {
       "tileID": tileID,
       "tileBBOX": tileBBOX,
@@ -45,7 +45,10 @@ class tilesMetadataManager:
       "sizeEstimated": sizeEstimated,
       "downloadDate": downloadDate.isoformat(),
       "firstCNNconfidence": firstCNNconfidence,
-      "secondCNNconfidence": secondCNNconfidence
+      "secondCNNconfidence": secondCNNconfidence,
+      "roadAngle": roadAngle,
+      "roadSide": roadSide,
+      "roadSegmentId": roadSegmentId
     }
 
     self.rowBuffer.append(newRow)

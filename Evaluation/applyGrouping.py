@@ -1,12 +1,15 @@
+import os
+import sys
+
 import geopandas as gpd
 import pandas as pd
 from evalPerRoad import findRoadFromPoint
 from evalPerZone import pointToZone
 
-df = pd.read_csv("results.csv")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+from utility.geo_utils import sqmPerPixel
 
-import geopandas as gpd
-import shapely.geometry as geom
+df = pd.read_csv("SEG_results.csv")
 
 extracted = df["tileId"].str.extract(r"(\d+\.\d+)\.(\d+\.\d+)\.png")
 
@@ -17,9 +20,7 @@ gdf = gpd.GeoDataFrame(
     df, geometry=gpd.points_from_xy(extracted["lon"], extracted["lat"]), crs="EPSG:4326"
 )
 
-TILE_SIZE_IN_SQM = 1430.0
-PIXELS_NUM = 224**2
-SQM_PER_PIXEL = (1 / PIXELS_NUM) * TILE_SIZE_IN_SQM
+SQM_PER_PIXEL = sqmPerPixel()
 
 zones = {"0.0": "NW", "0.1": "NE", "1.0": "SW", "1.1": "SE"}
 
@@ -46,11 +47,13 @@ gdf["extArea"] = gdf["extArea"] * SQM_PER_PIXEL
 gdf["gtArea"] = gdf["gtArea"] * SQM_PER_PIXEL
 gdf["areaErr"] = (gdf["extArea"] - gdf["gtArea"]).abs()
 
+print(gdf["areaErr"].mean())
+
 grouped = gdf.groupby("group")
 
 print(grouped["IoU"].mean())
 print(grouped["areaErr"].mean())
-print(grouped["areaErr"].std())
+print(grouped["areaErr"].count(), grouped["areaErr"].std())
 
 shp = gpd.read_file(
     "/home/leon/Documenti/Tesi/iternet/iternet_c91b903823ae2a975c539cc65f880af9/iternet/shp/",
@@ -65,4 +68,4 @@ grouped = gdf.groupby("group")
 
 print(grouped["IoU"].mean())
 print(grouped["areaErr"].mean())
-print(grouped["areaErr"].std())
+print(grouped["areaErr"].count(), grouped["areaErr"].std())

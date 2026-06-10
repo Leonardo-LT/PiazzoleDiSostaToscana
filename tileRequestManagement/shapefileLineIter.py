@@ -21,7 +21,7 @@ class shapefileLineIter:
 
     def __iter__(self):
         for counter, (idx, row) in enumerate(self.gdf.iterrows()):
-            if counter < 40:
+            if counter < 15:  # ELIMINARE
                 continue  # ELIMINARE
             print(idx)
             currStep = 0
@@ -30,7 +30,7 @@ class shapefileLineIter:
             if geometry.geom_type == "LineString":
                 while currStep < geometry.length:
                     point = geometry.interpolate(currStep)
-                    yield point
+                    yield point, geometry, currStep, row
                     currStep += self.stepSize
 
             elif geometry.geom_type == "MultiLineString":
@@ -38,7 +38,7 @@ class shapefileLineIter:
                     currStep = 0
                     while currStep < line.length:
                         point = line.interpolate(currStep)
-                        yield point
+                        yield point, line, currStep, row
                         currStep += self.stepSize
 
 

@@ -19,7 +19,7 @@ in_features = model.roi_heads.box_predictor.cls_score.in_features
 model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
 model.load_state_dict(
     torch.load(
-        "/home/leon/Documenti/Tesi/model_epoch_28(0.0004)(RandShadow).pth",
+        "/home/leon/Scaricati/model_epoch_30(faster 0.0004).pth",
         map_location=torch.device("cpu"),
     )
 )
@@ -168,7 +168,12 @@ model.eval()
 
 
 def infer(img):
-    transformEvalData = transforms.Compose([transforms.ToTensor()])
+    transformEvalData = transforms.Compose(
+        [
+            transforms.ToTensor(),
+            # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+        ]
+    )
 
     with torch.no_grad():
         t = transformEvalData(img)

@@ -1,11 +1,15 @@
 import json
 import os
+import sys
 
 import cv2
 import numpy as np
 import pandas as pd
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
 from areaExtimate import runEdgePipelineWPad
+from piazzolaLocation import classifyPoint, getMedianGradient
 
 
 def compute_iou(pred, gt):
@@ -38,7 +42,15 @@ def calculate_mask_iou(coco_json_path, img_dir, save_dir=None):
         x1, y1 = max(0, bx - 5), max(0, by - 5)
         x2, y2 = min(w, bx + bw + 5), min(h, by + bh + 5)
 
+        center_x = int((x1 + x2) / 2)
+        center_y = int((y1 + y2) / 2)
         pred = runEdgePipelineWPad(img_bgr, anns[0]["bbox"], padding=5)
+        gradient = getMedianGradient(pred["lines"])
+        if center_x is not None and center_y is not None and gradient is not None:
+            location = classifyPoint(center_x, center_y, gradient)
+
+        print(f"location {location} {img['file_name']}")
+
         pred_mask = pred["mask"]
         edges = pred["final_edges"]
 

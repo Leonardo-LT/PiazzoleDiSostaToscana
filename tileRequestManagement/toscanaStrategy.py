@@ -68,3 +68,25 @@ class ToscanaTileStrategy(RequestTileStrategy):
         
     except Exception as e:
         print(f"Error: {e}")
+
+
+  def requestCustomBBoxBytes(self, min_lat, min_lon, max_lat, max_lon, width_px, height_px):
+    custom_params = dict(self.params)
+    custom_params["BBOX"] = f"{min_lat},{min_lon},{max_lat},{max_lon}"
+    custom_params["WIDTH"] = str(width_px)
+    custom_params["HEIGHT"] = str(height_px)
+
+    try:
+        response = requests.get(self.wmsUrl, params=custom_params, timeout=10)
+
+        if response.headers.get("Content-Type") != "image/jpeg":
+          return None
+
+        if response.status_code != 200:
+          print(f"Error: code {response.status_code}")
+          return None
+
+        return response.content
+
+    except Exception as e:
+        print(f"Error requesting custom bbox: {e}")

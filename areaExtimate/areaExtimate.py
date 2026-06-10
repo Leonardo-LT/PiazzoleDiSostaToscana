@@ -1,5 +1,3 @@
-import itertools
-
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -117,6 +115,7 @@ def runEdgePipeline(single_channel):
         "final_edges": raw_edges,
         "clean_edges": line_mask,
         "mask": mask,
+        "lines": lines,
     }
 
 
